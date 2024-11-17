@@ -36,26 +36,37 @@ const GlowingButton = ({ children, href, className }) => (
 
 export default function Home() {
   const [isTyping, setIsTyping] = useState(true);
-  const [hasVisited, setHasVisited] = useState(false);
 
   useEffect(() => {
-    const visited = localStorage.getItem('hasVisitedHome');
-    if (visited) {
-      setIsTyping(false);
-      setHasVisited(true);
-    } else {
-      localStorage.setItem('hasVisitedHome', 'true');
-    }
+    // Only check localStorage once when component mounts
+    const checkFirstVisit = () => {
+      const visited = localStorage.getItem('hasVisitedHome');
+      if (visited) {
+        setIsTyping(false);
+      }
+    };
 
+    // Small delay before checking to ensure smooth loading
+    setTimeout(checkFirstVisit, 100);
+  }, []); // Empty dependency array - only runs once
+
+  // Separate useEffect for navbar control
+  useEffect(() => {
     const navbar = document.querySelector('header');
     if (navbar) {
       navbar.style.display = isTyping ? 'none' : 'block';
     }
+    
+    return () => {
+      if (navbar) {
+        navbar.style.display = 'block';
+      }
+    };
   }, [isTyping]);
 
   const handleTypingComplete = () => {
     setIsTyping(false);
-    setHasVisited(true);
+    localStorage.setItem('hasVisitedHome', 'true');
   };
 
   return (
@@ -72,27 +83,23 @@ export default function Home() {
       />
       
       <div className="w-full max-w-8xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-5 space-y-20">
-  <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-2 text-center">
-    <span className="bg-clip-text text-transparent bg-gradient-to-r from-secondary via-accent to-primary">
-      {isTyping ? (
-        <TypewriterEffect 
-          text="Welcome to Salman's Portfolio!" 
-          onComplete={() => setIsTyping(false)} 
-        />
-      ) : (
-        <motion.span
-          initial={{ opacity: 1, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
-          Salman Azeez Syed
-        </motion.span>
-      )}
-    </span>
-  </h1>
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-2 text-center">
+          <span className="bg-clip-text text-transparent bg-gradient-to-r from-secondary via-accent to-primary">
+            {isTyping ? (
+              <TypewriterEffect 
+                text="Welcome to Salman's Portfolio!" 
+                onComplete={() => setIsTyping(false)} 
+              />
+            ) : (
+              <motion.span>
+                Salman Azeez Syed
+              </motion.span>
+            )}
+          </span>
+        </h1>
 
-        <AnimatePresence>
-  {!isTyping && (
+    <AnimatePresence>
+      {!isTyping && (
       <>
         <MotionBox>
           <motion.div 

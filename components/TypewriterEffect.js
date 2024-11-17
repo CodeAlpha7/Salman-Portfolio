@@ -9,14 +9,22 @@ const TypewriterEffect = ({ text, onComplete }) => {
 
   useEffect(() => {
     const typeText = async () => {
+      // Reset state at the start
+      setDisplayText('');
+      setIsTypingDone(false);
+
+      // Type each character with a consistent delay
       for (let i = 0; i <= text.length; i++) {
         await new Promise(resolve => {
           setTimeout(() => {
             setDisplayText(text.slice(0, i));
             resolve();
-          }, 150);
+          }, 150); // Keep timing consistent
         });
       }
+      
+      // Small delay before completing
+      await new Promise(resolve => setTimeout(resolve, 500));
       setIsTypingDone(true);
     };
 
@@ -28,15 +36,18 @@ const TypewriterEffect = ({ text, onComplete }) => {
       controls.start({
         scale: [1, 1.1, 1],
         filter: ['brightness(100%)', 'brightness(200%)', 'brightness(100%)'],
-        transition: { duration: 0.5, ease: "easeOut" }
-      }).then(() => onComplete());
+        transition: { duration: 0.5 }
+      }).then(() => {
+        // Small delay before calling onComplete
+        setTimeout(() => onComplete(), 300);
+      });
     }
   }, [isTypingDone, controls, onComplete]);
 
   return (
     <div className="whitespace-nowrap">
       <motion.span 
-        className="font-['Source_Code_Pro'] font-normal"
+        className="font-['Source_Code_Pro'] font-normal bg-clip-text text-transparent bg-gradient-to-r from-secondary via-accent to-primary"
         animate={controls}
       >
         {displayText}
