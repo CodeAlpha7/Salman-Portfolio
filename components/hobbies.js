@@ -222,7 +222,7 @@ const HobbyCard = ({ hobby, icon, description, details, extraContent, type }) =>
       <h3 className="text-xl font-semibold text-secondary mb-4">Wishlist Languages</h3>
       <div className="grid grid-cols-2 gap-x-8 gap-y-2">
         {[
-          "Chinese",
+          "Mandarin",
           "Russian",
           "German",
           "Korean"
