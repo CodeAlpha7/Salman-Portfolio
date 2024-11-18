@@ -19,7 +19,7 @@ const TypewriterEffect = ({ text, onComplete }) => {
           setTimeout(() => {
             setDisplayText(text.slice(0, i));
             resolve();
-          }, 150); // Keep timing consistent
+          }, 110); // Keep timing consistent
         });
       }
       

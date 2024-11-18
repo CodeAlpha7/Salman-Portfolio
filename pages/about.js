@@ -226,15 +226,7 @@ const AboutMe = () => {
                 transition={{ duration: 0.5 }}
               />
             ))}
-            {/* <motion.path
-              d="M48,30 L160,30"
-              stroke="#D4AF37"
-              strokeWidth="3"
-              fill="none"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: (currentIndex + 1) / events.length }}
-              transition={{ duration: 0.8 }}
-            /> */}
+          
           </svg>
         </div>
       </div>

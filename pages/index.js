@@ -35,40 +35,22 @@ const GlowingButton = ({ children, href, className }) => (
   </motion.a>
 );
 
-export default function Home() {
-  const [isTyping, setIsTyping] = useState(true);
+export default function Home({ setShowNavbar }) {
+  const [isTyping, setIsTyping] = useState(null);
+  
+  useEffect(() => {
+    setIsTyping(!localStorage.getItem('hasVisitedHome'));
+  }, []);
 
   useEffect(() => {
-    // Only check localStorage once when component mounts
-    const checkFirstVisit = () => {
-      const visited = localStorage.getItem('hasVisitedHome');
-      if (visited) {
-        setIsTyping(false);
-      }
-    };
-
-    // Small delay before checking to ensure smooth loading
-    setTimeout(checkFirstVisit, 100);
-  }, []); // Empty dependency array - only runs once
-
-  // Separate useEffect for navbar control
-  useEffect(() => {
-    const navbar = document.querySelector('header');
-    if (navbar) {
-      navbar.style.display = isTyping ? 'none' : 'block';
+    if (isTyping !== null) {
+      setShowNavbar(!isTyping);
     }
-    
-    return () => {
-      if (navbar) {
-        navbar.style.display = 'block';
-      }
-    };
-  }, [isTyping]);
+  }, [isTyping, setShowNavbar]);
 
-  const handleTypingComplete = () => {
-    setIsTyping(false);
-    localStorage.setItem('hasVisitedHome', 'true');
-  };
+  if (isTyping === null) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-background text-text overflow-hidden relative flex flex-col justify-center items-center">
@@ -89,7 +71,10 @@ export default function Home() {
             {isTyping ? (
               <TypewriterEffect 
                 text="Welcome to Salman's Portfolio!" 
-                onComplete={() => setIsTyping(false)} 
+                onComplete={() => {
+                  localStorage.setItem('hasVisitedHome', 'true');
+                  setIsTyping(false);
+                }}
               />
             ) : (
               <motion.span>

@@ -27,7 +27,7 @@ export default function Layout({ children, showNavbar = true }) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ duration: 0.5 }}
-            className="bg-background text-text p-6 sticky top-0 z-50 backdrop-filter backdrop-blur-lg bg-opacity-20"
+            className="bg-background text-text p-6 sticky top-0 z-[60] backdrop-filter backdrop-blur-lg bg-opacity-20"
           >
             <div className="max-w-7xl mx-auto flex justify-between items-center">
               <Link href="/" className="font-heading text-3xl font-bold">

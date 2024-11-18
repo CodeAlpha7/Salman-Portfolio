@@ -1,11 +1,14 @@
 //_app.js
 import '../styles/globals.css'
 import Layout from '../components/Layout'
+import React, { useState, useEffect } from 'react';
 
 function MyApp({ Component, pageProps }) {
+  const [showNavbar, setShowNavbar] = useState(true);
+
   return (
-    <Layout>
-      <Component {...pageProps} />
+    <Layout showNavbar={showNavbar}>
+      <Component {...pageProps} setShowNavbar={setShowNavbar} />
     </Layout>
   )
 }
