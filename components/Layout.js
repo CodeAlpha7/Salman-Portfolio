@@ -3,6 +3,7 @@ import React from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Analytics } from '@vercel/analytics/next';
 
 const NavLink = ({ href, children }) => (
   <li>
@@ -51,6 +52,7 @@ export default function Layout({ children, showNavbar = true }) {
 
       <main className="flex-grow">
         {children}
+        <Analytics />
       </main>
 
       <footer className="bg-background text-text p-6 mt-12">
