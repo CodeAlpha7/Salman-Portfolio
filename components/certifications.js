@@ -1,6 +1,7 @@
 //components/certifications.js
 import React from 'react';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 // Reuse floating elements from other sections
 const FloatingElements = () => (
@@ -87,11 +88,13 @@ const CertCard = ({ title, issuer, date, logo, credentialUrl, index }) => (
           />
   
           <div className="mb-4">
-            <img 
-              src={logo} 
-              alt={`${issuer} logo`} 
-              className="h-11 w-auto object-contain"
-            />
+          <Image 
+            src={logo} 
+            alt={`${issuer} logo`} 
+            width={100}
+            height={44}
+            className="h-11 w-auto object-contain"
+          />
           </div>
         </div>
         

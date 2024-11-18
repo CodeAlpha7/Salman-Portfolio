@@ -348,7 +348,7 @@ const Hobbies = () => {
       hobby: "Video Games", 
       icon: "🎮", 
       description: "I paid for a full GPU, I will use the full GPU",
-      details: "People buy gaming laptops to play high-end games, but I am playing high-end games because I bought a gaming laptop. We're not the same. But, we do share our love for video games. My childhood was centered around very basic games like FIFA, WWE and Uncharted given limited gaming time, but now that I'm an adult with no one to stop me from playing games, I've decided to explore the world of gaming much deeper from competitive E-sports like Valorant and compelling story-based games like the Metal Gear Series to 'why am I playing this' type RPG games like Elden Ring.",
+      details: "People buy gaming laptops to play high-end games, but I am playing high-end games because I bought a gaming laptop. We&apos;re not the same. But, we do share our love for video games. My childhood was centered around very basic games like FIFA, WWE and Uncharted given limited gaming time, but now that I'm an adult with no one to stop me from playing games, I've decided to explore the world of gaming much deeper from competitive E-sports like Valorant and compelling story-based games like the Metal Gear Series to 'why am I playing this' type RPG games like Elden Ring.",
       type: "games",
       extraContent: {
         games: [
