@@ -1,310 +1,311 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 const HobbyCard = ({ hobby, icon, description, details, extraContent, type }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <div className="relative">
       {/* Main Card */}
-<motion.div 
-  className="relative group cursor-pointer h-full"  // Added h-full
-  initial={{ opacity: 0, y: 50 }}
-  whileInView={{ opacity: 1, y: 0 }}
-  viewport={{ once: true }}
-  transition={{ duration: 0.5 }}
->
-  {/* Stacked paper effect */}
-  <motion.div 
-    className="absolute -bottom-2 left-1 right-1 h-full bg-[#C2C2C2] rounded-2xl"  // Changed to rounded-2xl
-    style={{ transform: 'rotate(1deg)' }}
-  />
-  <motion.div 
-    className="absolute -bottom-1 left-0.5 right-0.5 h-full bg-[#A3A3A3] rounded-2xl"  // Changed to rounded-2xl
-    style={{ transform: 'rotate(-0.5deg)' }}
-  />
-
-  <motion.div 
-    className="
-      p-6 rounded-2xl relative
-      bg-[#F5F5F5]
-      shadow-lg hover:shadow-2xl
-      border border-secondary/30
-      transition-all duration-300
-      min-h-[180px]
-      w-full
-      overflow-visible
-      flex flex-col
-      justify-between
-    "
-    onClick={() => setIsExpanded(true)}
-    whileHover={{ 
-      scale: 1.03,
-      boxShadow: '0 20px 30px rgba(0,0,0,0.2)',
-      borderColor: 'rgba(212,175,55,0.6)'
-    }}
-  >
-    {/* Decorative elements */}
-    <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-    
-    {/* // In HobbyCard component, modify the decorative circle: */}
-    <motion.div
-      className="absolute right-0 top-0 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
-      style={{
-        background: 'radial-gradient(circle at 75% 25%, rgba(212,175,55,0.1) 0%, transparent 60%)',
-        clipPath: 'circle(50% at 75% 25%)'
-      }}
-      initial={false}
-      animate={{ rotate: [0, 180, 360] }}
-      transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-    />
-
-    <div className="relative z-10 h-full flex flex-col">
-      <motion.h3 
-        className="text-2xl font-bold mb-3"
-        style={{
-          background: 'linear-gradient(to right, #D4AF37, #966F33)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent'
-        }}
+      <motion.div 
+        className="relative group cursor-pointer h-full"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
       >
-        {hobby}
-      </motion.h3>
-      <p className="text-[#333333]/80">{description}</p>
-    </div>
-
-    {/* Expand Indicator */}
-    <motion.div 
-      className="absolute -bottom-3 left-1/2 transform -translate-x-1/2
-                 bg-secondary/90 text-white px-4 py-1 rounded-full text-sm
-                 opacity-0 group-hover:opacity-100 transition-opacity duration-300
-                 z-20"  // Added z-index
-    >
-      Click to view details
-    </motion.div>
-  </motion.div>
-</motion.div>
-
-      {/* Expanded View */}
-<AnimatePresence>
-  {isExpanded && (
-    <>
-      {/* Backdrop */}
-      <motion.div
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        onClick={() => setIsExpanded(false)}
-      />
-
-      {/* Content Modal */}
-      <motion.div
-        className={`
-          fixed z-[55] 
-          ${type === 'travel' || type === 'games' 
-            ? 'inset-32' 
-            : 'inset-1/4'}
-          bg-[#F5F5F5] 
-          rounded-xl 
-          flex 
-          flex-col
-        `}
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.9, opacity: 0 }}
-      >
-        {/* Background Pattern */}
-        <div 
-          className="absolute inset-0 pointer-events-none opacity-50"
-          style={{
-            backgroundImage: `
-              linear-gradient(135deg, rgba(212,175,55,0.03) 25%, transparent 25%),
-              linear-gradient(225deg, rgba(212,175,55,0.03) 25%, transparent 25%),
-              linear-gradient(45deg, rgba(212,175,55,0.03) 25%, transparent 25%),
-              linear-gradient(315deg, rgba(212,175,55,0.03) 25%, transparent 25%)
-            `,
-            backgroundPosition: '10px 0, 10px 0, 0 0, 0 0',
-            backgroundSize: '20px 20px',
-            backgroundRepeat: 'repeat'
-          }}
+        {/* Preserved stacked paper effect */}
+        <motion.div 
+          className="absolute -bottom-2 left-1 right-1 h-full bg-[#C2C2C2] rounded-2xl"
+          style={{ transform: 'rotate(1deg)' }}
+        />
+        <motion.div 
+          className="absolute -bottom-1 left-0.5 right-0.5 h-full bg-[#A3A3A3] rounded-2xl"
+          style={{ transform: 'rotate(-0.5deg)' }}
         />
 
-        {/* Content */}
-        <div className="relative z-10 p-8 overflow-y-auto h-full max-w-8xl mx-auto">
-          <motion.h2
-            className="text-3xl font-bold mb-6"
-            style={{
-              background: 'linear-gradient(to right, #D4AF37, #966F33)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}
-          >
-            {hobby}
-          </motion.h2>
-
-          <div className="space-y-6">
-            {/* Main Description */}
-            <div className="text-[#333333] leading-relaxed">
-              {details}
-            </div>
-
-            {/* Conditional Extra Content */}
-            {type === 'travel' && (
-  <div className="mt-8 space-y-10"> {/* Added space-y-12 for spacing between sections */}
-    <div>
-      <h3 className="text-xl font-semibold text-secondary mb-4">Countries Visited So Far</h3>
-      <div className="grid grid-cols-2 gap-x-8 gap-y-2">
-        {extraContent.places.map((place, index) => (
-          <div key={index} className="flex items-center">
-            <span className="text-secondary font-medium mr-4">{index + 1}.</span>
-            <span className="text-[#333333]">{place}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <div>
-      <h3 className="text-xl font-semibold text-secondary mb-4">Hey! I've been to the airport</h3>
-      <div className="grid grid-cols-2 gap-x-8 gap-y-2">
-        {[
-          "Japan (Narita) - ANA",
-          "Turkiye (Istanbul) - Turkish",
-          "Germany (Frankfurt) - Lufthansa"
-          
-        ].map((place, index) => (
-          <div key={index} className="flex items-center">
-            <span className="text-secondary font-medium mr-4">{index + 1}.</span>
-            <span className="text-[#333333]">{place}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <div>
-      <h3 className="text-xl font-semibold text-secondary mb-4">Countries I want to visit</h3>
-      <div className="grid grid-cols-2 gap-x-8 gap-y-2">
-        {[
-          "Japan - (Tokyo, Kyoto, Osaka)",
-          "South Korea  - (Seoul, Daegu, Buasn)",
-          "China - (Shanghai, Chengdu, Chongqing, Shanxi)",
-          "United Kingdom - (To watch Liverpool play)"
-        ].map((place, index) => (
-          <div key={index} className="flex items-center">
-            <span className="text-secondary font-medium mr-4">{index + 1}.</span>
-            <span className="text-[#333333]">{place}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <div>
-      <h3 className="text-xl font-semibold text-secondary mb-4">Languages I can speak</h3>
-      <div className="grid grid-cols-2 gap-x-8 gap-y-2">
-        {[
-          "English (Native)",
-          "Hindi (Native)",
-          "Japanese (Advanced)",
-          "Telugu (Intermediate)",
-          "Urdu (Intermediate)",
-          "Arabic (Basic)"
-        ].map((lang, index) => (
-          <div key={index} className="flex items-center">
-            <span className="text-secondary font-medium mr-4">{index + 1}.</span>
-            <span className="text-[#333333]">{lang}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <div>
-      <h3 className="text-xl font-semibold text-secondary mb-4">Wishlist Languages</h3>
-      <div className="grid grid-cols-2 gap-x-8 gap-y-2">
-        {[
-          "Mandarin",
-          "Russian",
-          "German",
-          "Korean"
-        ].map((lang, index) => (
-          <div key={index} className="flex items-center">
-            <span className="text-secondary font-medium mr-4">{index + 1}.</span>
-            <span className="text-[#333333]">{lang}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  </div>
-)}
-
-            {type === 'games' && (
-              <div className="mt-8 grid grid-cols-7 gap-56">
-                <div className="col-span-4">
-                  <h3 className="text-xl font-semibold text-secondary mb-4">Games Played So Far: </h3>
-                  <div className="space-y-1">
-                    {extraContent.games.map((game, index) => (
-                      <div key={index} className="flex justify-between items-center p-2 hover:bg-black/5 rounded-lg">
-                        <div className="flex items-center">
-                          <span className="text-secondary font-medium mr-4">{index + 1}.</span>
-                          <span className="text-[#333333]">{game.name}</span>
-                        </div>
-                        <span className="text-accent font-medium">{game.rating} / 10</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="col-span-3">
-                  <h3 className="text-xl font-semibold text-secondary mb-4">Wishlist: </h3>
-                  <div className="space-y-1">
-                    {extraContent.wishlist.map((game, index) => (
-                      <div key={index} className="flex items-center p-2 hover:bg-black/5 rounded-lg">
-                        <span className="text-secondary font-medium mr-4">{index + 1}.</span>
-                        <span className="text-[#333333]">{game}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {type === 'projects' && (
-              <div className="mt-8 text-center">
-                <Link 
-                  href="/experiences" 
-                  className="text-secondary hover:text-accent transition-colors duration-300"
-                >
-                  Have a look at my projects in detail in the experiences page →
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Close Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsExpanded(false);
+        <motion.div 
+          className="
+            p-4 sm:p-6 rounded-2xl relative
+            bg-[#F5F5F5]
+            shadow-lg hover:shadow-2xl
+            border border-secondary/30
+            transition-all duration-300
+            min-h-[180px]
+            w-full
+            overflow-visible
+            flex flex-col
+            justify-between
+          "
+          onClick={() => setIsExpanded(true)}
+          whileHover={{ 
+            scale: 1.03,
+            boxShadow: '0 20px 30px rgba(0,0,0,0.2)',
+            borderColor: 'rgba(212,175,55,0.6)'
           }}
-          className="absolute top-4 right-4 z-10 p-2 hover:bg-black/5 rounded-full transition-colors duration-300"
         >
-          <svg 
-            className="w-6 h-6 text-[#333333] hover:text-secondary transition-colors duration-300" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
+          {/* Preserved decorative elements */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-secondary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          
+          <motion.div
+            className="absolute right-0 top-0 w-32 h-32 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300"
+            style={{
+              background: 'radial-gradient(circle at 75% 25%, rgba(212,175,55,0.1) 0%, transparent 60%)',
+              clipPath: 'circle(50% at 75% 25%)'
+            }}
+            initial={false}
+            animate={{ rotate: [0, 180, 360] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          />
+
+          <div className="relative z-10 h-full flex flex-col">
+            <motion.h3 
+              className="text-xl sm:text-2xl font-bold mb-3"
+              style={{
+                background: 'linear-gradient(to right, #D4AF37, #966F33)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
+            >
+              {hobby}
+            </motion.h3>
+            <p className="text-[#333333]/80">{description}</p>
+          </div>
+
+          {/* Expand Indicator */}
+          <motion.div 
+            className="absolute -bottom-3 left-1/2 transform -translate-x-1/2
+                       bg-secondary/90 text-white px-4 py-1 rounded-full text-sm
+                       opacity-0 group-hover:opacity-100 transition-opacity duration-300
+                       z-20"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+            Click to view details
+          </motion.div>
+        </motion.div>
       </motion.div>
-    </>
-  )}
-</AnimatePresence>
+
+      {/* Enhanced Modal */}
+      <AnimatePresence>
+        {isExpanded && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[55]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsExpanded(false)}
+            />
+
+            {/* Content Modal - Improved responsive layout */}
+            <motion.div
+              className={`
+                fixed z-[55] 
+                ${isMobile 
+                  ? 'inset-2' 
+                  : type === 'travel' || type === 'games' 
+                    ? 'inset-16 sm:inset-24 lg:inset-32' 
+                    : 'inset-1/4'
+                }
+                bg-[#F5F5F5] 
+                rounded-xl 
+                flex 
+                flex-col
+                overflow-hidden
+              `}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+            >
+        {/* Enhanced Background Pattern */}
+        <div 
+                className="absolute inset-0 pointer-events-none opacity-50"
+                style={{
+                  backgroundImage: `
+                    linear-gradient(135deg, rgba(212,175,55,0.03) 25%, transparent 25%),
+                    linear-gradient(225deg, rgba(212,175,55,0.03) 25%, transparent 25%),
+                    linear-gradient(45deg, rgba(212,175,55,0.03) 25%, transparent 25%),
+                    linear-gradient(315deg, rgba(212,175,55,0.03) 25%, transparent 25%),
+                    radial-gradient(circle at 50% 50%, rgba(212,175,55,0.05) 0%, transparent 50%),
+                    repeating-linear-gradient(45deg, rgba(212,175,55,0.02) 0, rgba(212,175,55,0.02) 1px, transparent 0, transparent 50%)
+                  `,
+                  backgroundPosition: '10px 0, 10px 0, 0 0, 0 0',
+                  backgroundSize: '20px 20px, 20px 20px, 20px 20px, 20px 20px, 100% 100%, 10px 10px'
+                }}
+              />
+
+              {/* Content */}
+              <div className="relative z-10 p-4 sm:p-8 overflow-y-auto h-full">
+                <motion.h2
+                  className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6"
+                  style={{
+                    background: 'linear-gradient(to right, #D4AF37, #966F33)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent'
+                  }}
+                >
+                  {hobby}
+                </motion.h2>
+
+                <div className="space-y-6">
+                  {/* Main Description */}
+                  <div className="text-[#333333] leading-relaxed text-sm sm:text-base">
+                    {details}
+                  </div>
+
+                  {/* Conditional Extra Content with improved responsive layout */}
+                  {type === 'travel' && (
+                    <div className="mt-4 sm:mt-8 space-y-6 sm:space-y-10">
+                      {/* Countries Visited */}
+                      <div>
+                        <h3 className="text-lg sm:text-xl font-semibold text-secondary mb-3 sm:mb-4">
+                          Countries Visited So Far
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                          {extraContent.places.map((place, index) => (
+                            <div key={index} className="flex items-center">
+                              <span className="text-secondary font-medium mr-4">{index + 1}.</span>
+                              <span className="text-[#333333] text-sm sm:text-base">{place}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Airport Visits */}
+                      <div>
+                        <h3 className="text-lg sm:text-xl font-semibold text-secondary mb-3 sm:mb-4">
+                          Transit Experiences
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                          {[
+                            "Japan (Narita) - ANA",
+                            "Turkiye (Istanbul) - Turkish",
+                            "Germany (Frankfurt) - Lufthansa"
+                          ].map((place, index) => (
+                            <div key={index} className="flex items-center">
+                              <span className="text-secondary font-medium mr-4">{index + 1}.</span>
+                              <span className="text-[#333333] text-sm sm:text-base">{place}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Travel Wishlist */}
+                      <div>
+                        <h3 className="text-lg sm:text-xl font-semibold text-secondary mb-3 sm:mb-4">
+                          Travel Wishlist
+                        </h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2">
+                          {[
+                            "Japan - (Tokyo, Kyoto, Osaka)",
+                            "South Korea  - (Seoul, Daegu, Busan)",
+                            "China - (Shanghai, Chengdu, Chongqing, Shanxi)",
+                            "United Kingdom - (To watch Liverpool play)"
+                          ].map((place, index) => (
+                            <div key={index} className="flex items-center">
+                              <span className="text-secondary font-medium mr-4">{index + 1}.</span>
+                              <span className="text-[#333333] text-sm sm:text-base">{place}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {type === 'games' && (
+                    <div className="mt-4 sm:mt-8">
+                      <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 sm:gap-8 lg:gap-56">
+                        {/* Games Played */}
+                        <div className="lg:col-span-4">
+                          <h3 className="text-lg sm:text-xl font-semibold text-secondary mb-3 sm:mb-4">
+                            Games Played So Far:
+                          </h3>
+                          <div className="space-y-1 max-h-[60vh] overflow-y-auto pr-2">
+                            {extraContent.games.map((game, index) => (
+                              <div 
+                                key={index} 
+                                className="flex justify-between items-center p-2 hover:bg-black/5 rounded-lg"
+                              >
+                                <div className="flex items-center flex-1 min-w-0">
+                                  <span className="text-secondary font-medium mr-4">{index + 1}.</span>
+                                  <span className="text-[#333333] truncate">{game.name}</span>
+                                </div>
+                                <span className="text-accent font-medium ml-2">{game.rating} / 10</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Wishlist */}
+                        <div className="lg:col-span-3">
+                          <h3 className="text-lg sm:text-xl font-semibold text-secondary mb-3 sm:mb-4">
+                            Wishlist:
+                          </h3>
+                          <div className="space-y-1 max-h-[60vh] overflow-y-auto pr-2">
+                            {extraContent.wishlist.map((game, index) => (
+                              <div 
+                                key={index} 
+                                className="flex items-center p-2 hover:bg-black/5 rounded-lg"
+                              >
+                                <span className="text-secondary font-medium mr-4">{index + 1}.</span>
+                                <span className="text-[#333333] truncate">{game}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {type === 'projects' && (
+                    <div className="mt-4 sm:mt-8 text-center">
+                      <Link 
+                        href="/experiences" 
+                        className="text-secondary hover:text-accent transition-colors duration-300"
+                      >
+                        Have a look at my projects in detail in the experiences page →
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Enhanced Close Button */}
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsExpanded(false);
+                }}
+                className="absolute top-4 right-4 z-10 p-2 hover:bg-black/5 rounded-full transition-colors duration-300"
+              >
+                <motion.svg 
+                  className="w-6 h-6 text-[#333333] hover:text-secondary transition-colors duration-300" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </motion.svg>
+              </button>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
+
 
 const Hobbies = () => {
   const hobbies = [
@@ -403,13 +404,13 @@ const Hobbies = () => {
   ];
 
   return (
-    <div className="py-32 bg-background relative overflow-hidden">
-      {/* Floating Elements */}
+    <div className="py-16 sm:py-32 bg-background relative overflow-hidden">
+      {/* Enhanced Floating Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         {[...Array(12)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-3 h-3 rounded-full bg-secondary/15"
+            className="absolute w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-secondary/15"
             style={{
               left: `${Math.random() * 100}%`,
               top: `${Math.random() * 100}%`,
@@ -429,8 +430,9 @@ const Hobbies = () => {
         ))}
       </div>
 
+      {/* Responsive Section Title */}
       <motion.h2 
-        className="text-5xl font-bold text-center mb-32"
+        className="text-4xl sm:text-5xl font-bold text-center mb-16 sm:mb-32"
         style={{ fontFamily: 'Kalam, cursive' }}
         initial={{ y: -50, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
@@ -440,7 +442,8 @@ const Hobbies = () => {
         <span className="text-primary">Hobbies & Interests</span>
       </motion.h2>
 
-      <div className="max-w-8xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 px-16 relative z-10">
+      {/* Responsive Grid Layout */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 px-4 sm:px-6 lg:px-8 relative z-10">
         {hobbies.map((hobby, index) => (
           <HobbyCard
             key={index}
@@ -449,7 +452,7 @@ const Hobbies = () => {
         ))}
       </div>
 
-      {/* Background Pattern */}
+      {/* Enhanced Background Pattern */}
       <div 
         className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{
@@ -457,11 +460,22 @@ const Hobbies = () => {
             linear-gradient(30deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
             linear-gradient(150deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
             linear-gradient(30deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
-            linear-gradient(150deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37)
+            linear-gradient(150deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
+            linear-gradient(60deg, #D4AF37 25%, transparent 25.5%, transparent 75%, #D4AF37 75%, #D4AF37),
+            linear-gradient(60deg, #D4AF37 25%, transparent 25.5%, transparent 75%, #D4AF37 75%, #D4AF37)
           `,
           backgroundSize: '80px 140px',
-          backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px'
+          backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px'
         }}
+      />
+
+      {/* Decorative Bottom Border */}
+      <motion.div
+        className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-secondary/30 to-transparent"
+        initial={{ scaleX: 0, opacity: 0 }}
+        whileInView={{ scaleX: 1, opacity: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.5 }}
       />
     </div>
   );
