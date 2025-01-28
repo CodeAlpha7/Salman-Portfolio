@@ -84,6 +84,17 @@ const curvePatterns = [
 const AboutMe = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [key, setKey] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Handle responsive layout
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const nextSlide = () => {
     setCurrentIndex((prevIndex) => (prevIndex + 1) % events.length);
@@ -107,133 +118,176 @@ const AboutMe = () => {
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
         <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&display=swap" rel="stylesheet" />
       </Head>
-      <div className="relative h-screen overflow-hidden bg-background">
-        <h1 className="absolute top-16 left-1/2 transform -translate-x-1/2 text-4xl text-primary z-10" style={{ fontFamily: 'Kalam, cursive' }}>
-          My Journey So Far
-        </h1>
-        
-        {/* Artistic squiggly timeline */}
-        <svg className="absolute w-full h-full" preserveAspectRatio="none">
-          <defs>
-            <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" style={{ stopColor: '#D4AF37', stopOpacity: 1 }} />
-              <stop offset="100%" style={{ stopColor: '#FFA500', stopOpacity: 1 }} />
-            </linearGradient>
-          </defs>
-          <motion.path
-            key={key}
-            d={curvePatterns[currentIndex]}
-            fill="none"
-            stroke="url(#goldGradient)"
-            strokeWidth="4"
-            initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 5, ease: "easeInOut" }}
-          />
-        </svg>
-
-        {/* Event slides */}
-        <AnimatePresence mode='wait'>
-          <motion.div
-            key={currentIndex}
-            className="absolute inset-0 flex items-center justify-center"
-            initial={{ opacity: 0, x: 300 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -300 }}
-            transition={{ duration: 0.5 }}
+      <div className="relative min-h-screen overflow-hidden bg-background">
+        {/* Journey Section */}
+        <div className="relative h-[calc(100vh-4rem)] sm:h-screen">
+          <h1 
+            className="absolute top-8 sm:top-16 left-1/2 transform -translate-x-1/2 
+                       text-3xl sm:text-4xl md:text-5xl text-primary z-10" 
+            style={{ fontFamily: 'Kalam, cursive' }}
           >
-            <div className="text-center text-primary">
-              <div className="-mt-16">
-                <motion.h2 className="text-8xl font-bold mb-4" style={{ fontFamily: 'Kalam, cursive' }} initial={{ scale: 0 }}
+            My Journey So Far
+          </h1>
+          
+          {/* Artistic squiggly timeline - Responsive scaling */}
+          <svg 
+            className="absolute w-full h-full scale-75 sm:scale-100" 
+            preserveAspectRatio="none"
+            viewBox="0 0 2400 600"
+          >
+            <defs>
+              <linearGradient id="goldGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" style={{ stopColor: '#D4AF37', stopOpacity: 1 }} />
+                <stop offset="100%" style={{ stopColor: '#FFA500', stopOpacity: 1 }} />
+              </linearGradient>
+            </defs>
+            <motion.path
+              key={key}
+              d={curvePatterns[currentIndex]}
+              fill="none"
+              stroke="url(#goldGradient)"
+              strokeWidth="4"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 5, ease: "easeInOut" }}
+            />
+          </svg>
+
+          {/* Event slides with responsive layout */}
+          <AnimatePresence mode='wait'>
+            <motion.div
+              key={currentIndex}
+              className="absolute inset-0 flex items-center justify-center px-4 sm:px-8"
+              initial={{ opacity: 0, x: 300 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -300 }}
+              transition={{ duration: 0.5 }}
+            >
+              <div className="text-center text-primary max-w-4xl">
+                <div className="-mt-8 sm:-mt-16">
+                  <motion.h2 
+                    className="text-6xl sm:text-8xl font-bold mb-4" 
+                    style={{ fontFamily: 'Kalam, cursive' }}
+                    initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 260, damping: 20 }}>
-                  {String(events[currentIndex].year).split('').map((char, index) => (
-                    <motion.span
-                      key={index}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      transition={{ delay: index * 0.35 }}
-                    >
-                      {char}
-                    </motion.span>
-                  ))}
-                </motion.h2>
-                <h3 className="text-4xl font-semibold mb-2" style={{ fontFamily: 'Kalam, cursive' }}>
-                  {events[currentIndex].title}
-                </h3>
-                <p className="text-xl" style={{ fontFamily: 'Kalam, cursive' }}>
-                  {events[currentIndex].description}
-                </p>
-              </div>
-              <ul className="text-left list-disc list-inside space-y-3 mt-20">
-                {events[currentIndex].bullets.map((bullet, index) => (
-                  <motion.li 
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.5 }}
-                    className="text-lg"
+                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                  >
+                    {String(events[currentIndex].year).split('').map((char, index) => (
+                      <motion.span
+                        key={index}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: index * 0.35 }}
+                      >
+                        {char}
+                      </motion.span>
+                    ))}
+                  </motion.h2>
+                  <h3 
+                    className="text-2xl sm:text-4xl font-semibold mb-2" 
                     style={{ fontFamily: 'Kalam, cursive' }}
                   >
-                    {bullet}
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-          </motion.div>
-        </AnimatePresence>
+                    {events[currentIndex].title}
+                  </h3>
+                  <p 
+                    className="text-lg sm:text-xl" 
+                    style={{ fontFamily: 'Kalam, cursive' }}
+                  >
+                    {events[currentIndex].description}
+                  </p>
+                </div>
+                
+                {/* Responsive bullet points */}
+                <ul className="text-left list-disc list-inside space-y-2 sm:space-y-3 mt-12 sm:mt-20 max-w-3xl mx-auto">
+                  {events[currentIndex].bullets.map((bullet, index) => (
+                    <motion.li 
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.5 }}
+                      className="text-base sm:text-lg"
+                      style={{ fontFamily: 'Kalam, cursive' }}
+                    >
+                      {bullet}
+                    </motion.li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
-        {/* Navigation arrows with hover effect */}
-        <motion.button 
-          className="absolute left-4 top-1/2 transform -translate-y-1/2 text-primary text-5xl p-4 rounded-full"
-          onClick={prevSlide}
-          whileHover={{ scale: 1.25, backgroundColor: "rgba(255,255,255,0.3)" }}
-          whileTap={{ scale: 0.9 }}
-        >
-          &#8249;
-        </motion.button>
-        <motion.button 
-          className="absolute right-4 top-1/2 transform -translate-y-1/2 text-primary text-5xl p-4 rounded-full"
-          onClick={nextSlide}
-          whileHover={{ scale: 1.25, backgroundColor: "rgba(255,255,255,0.3)" }}
-          whileTap={{ scale: 0.9 }}
-        >
-          &#8250;
-        </motion.button>
+          {/* Navigation arrows with responsive positioning */}
+          {!isMobile && (
+            <>
+              <motion.button 
+                className="absolute left-4 sm:left-8 top-1/2 transform -translate-y-1/2 text-primary text-4xl sm:text-5xl p-4 rounded-full"
+                onClick={prevSlide}
+                whileHover={{ scale: 1.25, backgroundColor: "rgba(255,255,255,0.3)" }}
+                whileTap={{ scale: 0.9 }}
+              >
+                &#8249;
+              </motion.button>
+              <motion.button 
+                className="absolute right-4 sm:right-8 top-1/2 transform -translate-y-1/2 text-primary text-4xl sm:text-5xl p-4 rounded-full"
+                onClick={nextSlide}
+                whileHover={{ scale: 1.25, backgroundColor: "rgba(255,255,255,0.3)" }}
+                whileTap={{ scale: 0.9 }}
+              >
+                &#8250;
+              </motion.button>
+            </>
+          )}
 
-        {/* Creative progress bar */}
-        <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2">
-          <svg width="250" height="60" viewBox="0 0 200 60">
-            <defs>
-              <filter id="glow">
-                <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
-                <feMerge>
-                  <feMergeNode in="coloredBlur"/>
-                  <feMergeNode in="SourceGraphic"/>
-                </feMerge>
-              </filter>
-            </defs>
-            {events.map((_, index) => (
-              <motion.circle
-                key={index}
-                cx={40 * (index + 1)}
-                cy="30"
-                r="8"
-                fill={index === currentIndex ? "#F2D356" : "#CECECE"}
-                filter="url(#glow)"
-                initial={{ scale: 0 }}
-                animate={{ scale: index === currentIndex ? 0.9 : 0.6 }}
-                transition={{ duration: 0.5 }}
-              />
-            ))}
-          
-          </svg>
+          {/* Progress indicators */}
+          <div className="absolute bottom-8 sm:bottom-16 left-1/2 transform -translate-x-1/2">
+            <svg width="250" height="60" viewBox="0 0 200 60">
+              <defs>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+              </defs>
+              {events.map((_, index) => (
+                <motion.circle
+                  key={index}
+                  cx={40 * (index + 1)}
+                  cy="30"
+                  r="8"
+                  fill={index === currentIndex ? "#F2D356" : "#CECECE"}
+                  filter="url(#glow)"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: index === currentIndex ? 0.9 : 0.6 }}
+                  transition={{ duration: 0.5 }}
+                />
+              ))}
+            </svg>
+          </div>
         </div>
+
+        {/* Background pattern - Preserved from original */}
+        <div 
+          className="absolute inset-0 opacity-[0.02] pointer-events-none"
+          style={{
+            backgroundImage: `
+              linear-gradient(30deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
+              linear-gradient(150deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
+              linear-gradient(30deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
+              linear-gradient(150deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37)
+            `,
+            backgroundSize: '80px 140px',
+            backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px'
+          }}
+        />
+
+        {/* Imported components */}
+        <Education />
+        <Skills />
+        <Certifications />
+        <Hobbies />
       </div>
-      <Education />
-      <Skills />
-      <Certifications />
-      <Hobbies />
     </>
   );
 };
