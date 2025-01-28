@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
 
+// Floating elements component - preserved
 const FloatingElements = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {[...Array(12)].map((_, i) => (
@@ -30,46 +30,23 @@ const FloatingElements = () => (
 
 const TimelineConnector = () => (
   <motion.div
-    className="absolute left-1/2 -translate-x-1/2 w-px h-24 -mt-12 mb-12 bg-gradient-to-b from-secondary/30 to-transparent"
+    className="absolute left-1/2 -translate-x-1/2 w-px h-16 sm:h-24 -mt-8 sm:-mt-12 mb-8 sm:mb-12 bg-gradient-to-b from-secondary/30 to-transparent"
     initial={{ scaleY: 0 }}
     animate={{ scaleY: 1 }}
     transition={{ duration: 1 }}
   />
 );
 
-const CourseGrid = ({ courses }) => (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {courses.map((column, idx) => (
-      <div key={idx} className="space-y-3">
-        {column.map((course, index) => (
-          <motion.div
-            key={index}
-            className="p-3 rounded-lg bg-white/50 backdrop-blur-sm
-                     shadow-sm
-                     text-primary/90 font-medium
-                     transition-all duration-300"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: index * 0.05 }}
-          >
-            {course}
-          </motion.div>
-        ))}
-      </div>
-    ))}
-  </div>
-);
-
 const EducationCard = ({ university, degree, specialization, location, graduationDate, courses, isExpanded, onToggle }) => {
   return (
     <motion.div 
-      className="mb-20 relative group" // Added margin-bottom to prevent overlap
+      className="mb-12 sm:mb-20 relative group"
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: 0.1 }}
     >
-      {/* Lighter stacked paper effect */}
+      {/* Preserved stacked paper effect */}
       <motion.div 
         className="absolute -bottom-2 left-1 right-1 h-full bg-[#C2C2C2] rounded-xl"
         style={{ transform: 'rotate(1deg)' }}
@@ -81,13 +58,13 @@ const EducationCard = ({ university, degree, specialization, location, graduatio
 
       <motion.div 
         className="
-          p-8 rounded-xl relative 
+          p-4 sm:p-8 rounded-xl relative 
           bg-[#F5F5F5]
           shadow-[0_20px_40px_rgba(0,0,0,0.6)]
           border border-secondary/10
           transition-all duration-300
           flex flex-col
-          min-h-[180px]  // Reduced minimum height
+          min-h-[180px]
           w-full
         "
         onClick={onToggle}
@@ -97,11 +74,11 @@ const EducationCard = ({ university, degree, specialization, location, graduatio
           borderColor: 'rgba(212,175,55,0.6)'
         }}
       >
-        {/* Header content with proper spacing */}
-        <div className="flex justify-between items-start mb-4"> {/* Reduced margin */}
+        {/* Header content with responsive layout */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
           <div className="flex-grow">
             <h3 
-              className="text-2xl font-bold mb-4"
+              className="text-xl sm:text-2xl font-bold mb-2 sm:mb-4"
               style={{
                 background: 'linear-gradient(to right, #D4AF37, #966F33)',
                 WebkitBackgroundClip: 'text',
@@ -110,12 +87,12 @@ const EducationCard = ({ university, degree, specialization, location, graduatio
             >
               {university}
             </h3>
-            <div className="space-y-2"> {/* Better spacing for degree info */}
-              <p className="text-lg font-semibold text-[#333333]">{degree}</p>
-              <p className="italic text-[#333333]/80 text-sm">{specialization}</p>
+            <div className="space-y-1 sm:space-y-2">
+              <p className="text-base sm:text-lg font-semibold text-[#333333]">{degree}</p>
+              <p className="italic text-[#333333]/80 text-sm sm:text-base">{specialization}</p>
             </div>
           </div>
-          <div className="text-right ml-4"> {/* Added margin-left for separation */}
+          <div className="text-right mt-2 sm:mt-0 sm:ml-4">
             <p className="text-secondary font-medium">{location}</p>
             <p className="text-accent/90 text-sm">{graduationDate}</p>
           </div>
@@ -129,18 +106,18 @@ const EducationCard = ({ university, degree, specialization, location, graduatio
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.5 }}
-              className="mt-6 border-t border-secondary/60 pt-6" // Added border for separation
+              className="mt-4 sm:mt-6 border-t border-secondary/60 pt-4 sm:pt-6"
             >
-              <h4 className="font-semibold text-lg text-center mb-6 text-secondary">
+              <h4 className="font-semibold text-base sm:text-lg text-center mb-4 sm:mb-6 text-secondary">
                 Key Courses
               </h4>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
                 {courses.map((column, idx) => (
                   <div key={idx} className="space-y-2">
                     {column.map((course, index) => (
                       <div
                         key={index}
-                        className="p-3 rounded-lg bg-white
+                        className="p-2 sm:p-3 rounded-lg bg-white
                                  text-[#333333] font-medium text-sm
                                  transition-colors duration-300
                                  hover:bg-white/80
@@ -159,7 +136,7 @@ const EducationCard = ({ university, degree, specialization, location, graduatio
         {/* Expand/Collapse Indicator */}
         <motion.div 
           className="absolute -bottom-3 left-1/2 transform -translate-x-1/2
-                     bg-secondary/90 text-white px-4 py-1 rounded-full text-sm
+                     bg-secondary/90 text-white px-3 sm:px-4 py-1 rounded-full text-xs sm:text-sm
                      opacity-0 group-hover:opacity-100 transition-opacity duration-300"
           animate={{ y: isExpanded ? 10 : 0 }}
         >
@@ -186,12 +163,12 @@ const Education = () => {
   ];
 
   return (
-    <div className="py-32 bg-background relative overflow-hidden">
-      {/* Floating elements */}
+    <div className="py-16 sm:py-32 bg-background relative overflow-hidden">
+      {/* Floating elements preserved */}
       <FloatingElements />
 
       <motion.h2 
-        className="text-5xl font-bold text-center mb-28" // Increased margin bottom
+        className="text-4xl sm:text-5xl font-bold text-center mb-16 sm:mb-28"
         style={{ fontFamily: 'Kalam, cursive' }}
         initial={{ y: -50, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
@@ -201,7 +178,7 @@ const Education = () => {
         <span className="text-primary">Education</span>
       </motion.h2>
 
-      <div className="max-w-5xl mx-auto px-6 relative z-10">
+      <div className="max-w-3xl sm:max-w-5xl mx-auto px-4 sm:px-6 relative z-10">
         <EducationCard 
           university="Georgia Institute of Technology"
           degree="Master of Science (MS) in Computer Science"
@@ -213,7 +190,6 @@ const Education = () => {
           onToggle={() => setExpandedCard(expandedCard === "gt" ? null : "gt")}
         />
         
-        {/* Timeline connector */}
         <TimelineConnector />
         
         <EducationCard 
@@ -228,7 +204,7 @@ const Education = () => {
         />
       </div>
 
-      {/* Enhanced background pattern */}
+      {/* Preserved background pattern */}
       <div 
         className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{
