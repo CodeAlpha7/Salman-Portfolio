@@ -1,8 +1,7 @@
-//components/skills.js
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 
-// Floating elements component
+// Preserved Floating elements component
 const FloatingElements = () => (
   <div className="absolute inset-0 overflow-hidden pointer-events-none">
     {[...Array(12)].map((_, i) => (
@@ -31,19 +30,25 @@ const FloatingElements = () => (
 
 const useMousePosition = () => {
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice('ontouchstart' in window);
+  }, []);
 
   const handleMove = (e) => {
+    if (isTouchDevice) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     setPosition({ x, y });
   };
 
-  return { position, handleMove };
+  return { position, handleMove, isTouchDevice };
 };
 
 const SkillCategory = ({ category, skills, index }) => {
-  const { position, handleMove } = useMousePosition();
+  const { position, handleMove, isTouchDevice } = useMousePosition();
   
   return (
     <motion.div 
@@ -53,7 +58,7 @@ const SkillCategory = ({ category, skills, index }) => {
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
     >
-      {/* Stacked paper effect */}
+      {/* Preserved stacked paper effect */}
       <motion.div 
         className="absolute -bottom-2 left-1 right-1 h-full bg-[#1F1F1F] rounded-xl"
         style={{ transform: 'rotate(1deg)' }}
@@ -65,7 +70,7 @@ const SkillCategory = ({ category, skills, index }) => {
 
       <motion.div 
         className={`
-          p-6 rounded-xl relative
+          p-4 sm:p-6 rounded-xl relative
           bg-[#2B2B2B]
           shadow-[0_10px_30px_rgba(0,0,0,0.5)]
           border border-secondary/30
@@ -73,7 +78,9 @@ const SkillCategory = ({ category, skills, index }) => {
         `}
         onMouseMove={handleMove}
         style={{
-          transform: `perspective(1000px) rotateX(${position.y * 8}deg) rotateY(${position.x * 8}deg)`,
+          transform: !isTouchDevice 
+            ? `perspective(1000px) rotateX(${position.y * 8}deg) rotateY(${position.x * 8}deg)`
+            : 'none',
           transition: 'transform 0.1s ease'
         }}
         whileHover={{ 
@@ -82,9 +89,9 @@ const SkillCategory = ({ category, skills, index }) => {
           borderColor: 'rgba(212,175,55,0.6)'
         }}
       >
-        <div className="flex items-center mb-6">
+        <div className="flex items-center mb-4 sm:mb-6">
           <h3 
-            className="text-2xl font-bold"
+            className="text-xl sm:text-2xl font-bold"
             style={{
               background: 'linear-gradient(to right, #D4AF37, #966F33)',
               WebkitBackgroundClip: 'text',
@@ -102,26 +109,29 @@ const SkillCategory = ({ category, skills, index }) => {
           />
         </div>
 
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           {skills.map((skill) => (
-            <span 
+            <motion.span 
               key={skill}
               className="
-                px-4 py-2 rounded-lg
+                px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg
                 bg-black/20
                 border border-secondary/30
                 text-white/90
-                text-sm font-medium
+                text-xs sm:text-sm font-medium
                 transition-all duration-300
                 hover:border-secondary/50
+                whitespace-nowrap
               "
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
               {skill}
-            </span>
+            </motion.span>
           ))}
         </div>
 
-        {/* Background pattern */}
+        {/* Preserved background pattern */}
         <div 
           className="absolute inset-0 opacity-5 pointer-events-none rounded-xl overflow-hidden"
           style={{
@@ -158,12 +168,12 @@ const Skills = () => {
   ];
 
   return (
-    <div className="py-32 bg-background relative overflow-hidden">
+    <div className="py-16 sm:py-32 bg-background relative overflow-hidden">
       {/* Floating elements */}
       <FloatingElements />
 
       <motion.h2 
-        className="text-5xl font-bold text-center mb-32"
+        className="text-4xl sm:text-5xl font-bold text-center mb-16 sm:mb-32"
         style={{ fontFamily: 'Kalam, cursive' }}
         initial={{ y: -50, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
@@ -173,13 +183,13 @@ const Skills = () => {
         <span className="text-primary">Skills</span>
       </motion.h2>
 
-      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8 px-4 relative z-10">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 px-4 sm:px-6 relative z-10">
         {skillCategories.map((cat, index) => (
           <SkillCategory key={cat.category} {...cat} index={index} />
         ))}
       </div>
 
-      {/* Enhanced background pattern */}
+      {/* Preserved background pattern */}
       <div 
         className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{
@@ -187,12 +197,10 @@ const Skills = () => {
             linear-gradient(30deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
             linear-gradient(150deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
             linear-gradient(30deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
-            linear-gradient(150deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37),
-            linear-gradient(60deg, #D4AF37 25%, transparent 25.5%, transparent 75%, #D4AF37 75%, #D4AF37),
-            linear-gradient(60deg, #D4AF37 25%, transparent 25.5%, transparent 75%, #D4AF37 75%, #D4AF37)
+            linear-gradient(150deg, #D4AF37 12%, transparent 12.5%, transparent 87%, #D4AF37 87.5%, #D4AF37)
           `,
           backgroundSize: '80px 140px',
-          backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px, 0 0, 40px 70px'
+          backgroundPosition: '0 0, 0 0, 40px 70px, 40px 70px'
         }}
       />
     </div>
