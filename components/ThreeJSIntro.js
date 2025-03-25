@@ -94,6 +94,30 @@ const Particles = ({ count = 2000 }) => {
   );
 };
 
+// NEW COMPONENT: Calculate responsive particle count based on viewport size
+const ResponsiveParticles = () => {
+  const { viewport } = useThree();
+  
+  // Calculate particle count based on viewport size
+  const calculateParticleCount = () => {
+    const minCount = 500;  // Minimum particle count for small screens
+    const maxCount = 20000;  // Maximum particle count for large screens
+    const minViewport = 5;  // Viewport width threshold for minimum count
+    const maxViewport = 20; // Viewport width threshold for maximum count
+    
+    if (viewport.width <= minViewport) return minCount;
+    if (viewport.width >= maxViewport) return maxCount;
+    
+    // Linear interpolation between min and max count
+    const ratio = (viewport.width - minViewport) / (maxViewport - minViewport);
+    return Math.floor(minCount + ratio * (maxCount - minCount));
+  };
+  
+  const particleCount = calculateParticleCount();
+  
+  return <Particles count={particleCount} />;
+};
+
 // Floating elements in the background
 const BackgroundSpheres = () => {
   const group = useRef();
@@ -206,7 +230,8 @@ const ThreeJSIntro = ({ onComplete }) => {
           />
         </Float>
         
-        <Particles count={7000} />
+        {/* Replace the fixed count with the responsive component */}
+        <ResponsiveParticles />
       </Canvas>
     </div>
   );
